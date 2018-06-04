@@ -13,18 +13,17 @@ app.use( express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('new user connected.');
 
-    socket.emit('newMessage', {
-        from: 'Tejas',
-        text: 'hello brother',
-        createdAt: 1234
-    });
-    
     socket.on('disconnect', () => {
         console .log('Disconnected from the client');
     });
 
-    socket.on('createMessage', (newmsg) => {
-        console.log('createMessage', newmsg);
+    socket.on('createMessage', (msg) => {
+        console.log('createMessage',msg);
+        io.emit('newMessage', {
+            from: msg.from,
+            text: msg.text,
+            createdAt: new Date().getTime()
+        });
     });
 });
 server.listen(port, () => {
